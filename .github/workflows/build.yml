@@ -9,6 +9,8 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v6
+      with:
+        lfs: true
     - name: "Determine Branch"
       id: branches
       uses: transferwise/sanitize-branch-name@v1
