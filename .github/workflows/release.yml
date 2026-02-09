@@ -1,0 +1,27 @@
+name: Upload releases assets
+
+on:
+  release:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+    types: [published]
+
+jobs:
+  package:
+    name: Package
+    runs-on: windows-latest
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v6
+    - name: Delete git files
+      run: |
+        Remove-Item -Recurse -Force .git
+        Get-ChildItem -Recurse -Include .git* | Remove-Item -Force -Recurse
+    - name: Create zip of resources
+      run: |
+        Compress-Archive -Path * -DestinationPath odatests-resources.zip -CompressionLevel Optimal
+    - name: Upload assets to release
+      uses: softprops/action-gh-release@v2.5.0
+      with:
+        files: |
+          odatests-resources.zip
